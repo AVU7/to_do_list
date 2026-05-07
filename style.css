@@ -6,6 +6,8 @@
   --primary: #2563eb;
   --danger: #dc2626;
   --border: #e5e7eb;
+  --nav-bg: linear-gradient(90deg, #2563eb 0%, #1d4ed8 100%);
+  --nav-text: #ffffff;
 }
 
 body.dark-theme {
@@ -16,6 +18,8 @@ body.dark-theme {
   --primary: #60a5fa;
   --danger: #f87171;
   --border: #334155;
+  --nav-bg: linear-gradient(90deg, #1e293b 0%, #0f172a 100%);
+  --nav-text: #e5e7eb;
 }
 
 * {
@@ -35,9 +39,10 @@ body {
   position: sticky;
   top: 0;
   z-index: 10;
-  border-bottom: 1px solid var(--border);
-  background: color-mix(in srgb, var(--card) 94%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--nav-text) 18%, transparent);
+  background: var(--nav-bg);
   backdrop-filter: blur(4px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
 }
 
 .navbar-inner {
@@ -53,18 +58,18 @@ body {
 .brand {
   font-size: 18px;
   font-weight: 700;
-  color: var(--primary);
+  color: var(--nav-text);
 }
 
 .theme-toggle {
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text);
+  border: 1px solid color-mix(in srgb, var(--nav-text) 35%, transparent);
+  background: color-mix(in srgb, var(--nav-text) 10%, transparent);
+  color: var(--nav-text);
   padding: 8px 12px;
 }
 
 .theme-toggle:hover {
-  background: color-mix(in srgb, var(--card) 70%, var(--bg));
+  background: color-mix(in srgb, var(--nav-text) 18%, transparent);
 }
 
 .app {
