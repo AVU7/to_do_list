@@ -2,9 +2,11 @@ const taskInput = document.getElementById("taskInput");
 const addBtn = document.getElementById("addBtn");
 const taskList = document.getElementById("taskList");
 const count = document.getElementById("count");
+const themeToggle = document.getElementById("themeToggle");
 
 const tasks = [];
 let nextTaskId = 1;
+const THEME_STORAGE_KEY = "todo-theme";
 
 function updateCount() {
   const total = tasks.length;
@@ -81,6 +83,31 @@ function addTask() {
   renderTasks(newTask.id);
 }
 
+function applyTheme(theme) {
+  const isDark = theme === "dark";
+  document.body.classList.toggle("dark-theme", isDark);
+  themeToggle.textContent = isDark ? "Light Mode" : "Dark Mode";
+}
+
+function initializeTheme() {
+  const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+  if (savedTheme === "dark" || savedTheme === "light") {
+    applyTheme(savedTheme);
+    return;
+  }
+
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  applyTheme(prefersDark ? "dark" : "light");
+}
+
+themeToggle.addEventListener("click", () => {
+  const isDark = document.body.classList.contains("dark-theme");
+  const nextTheme = isDark ? "light" : "dark";
+  applyTheme(nextTheme);
+  localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+});
+
+initializeTheme();
 addBtn.addEventListener("click", addTask);
 taskInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") addTask();
