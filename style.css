@@ -86,6 +86,12 @@ li {
   border-radius: 8px;
   padding: 10px;
   background: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+li:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
 }
 
 .task-label {
@@ -105,6 +111,18 @@ li {
   color: var(--muted);
 }
 
+.task-enter {
+  animation: taskEnter 0.28s ease-out;
+}
+
+.task-exit {
+  animation: taskExit 0.24s ease-in forwards;
+}
+
+.task-complete-pulse {
+  animation: taskCompletePulse 0.26s ease;
+}
+
 .delete-btn {
   background: var(--danger);
   color: #fff;
@@ -115,4 +133,48 @@ li {
   color: var(--muted);
   font-size: 13px;
   margin-top: 12px;
+}
+
+@keyframes taskEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes taskExit {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+    max-height: 64px;
+    margin-bottom: 0;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(12px);
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0;
+    margin-bottom: -8px;
+  }
+}
+
+@keyframes taskCompletePulse {
+  0% {
+    transform: scale(1);
+    background: #fff;
+  }
+  50% {
+    transform: scale(1.01);
+    background: #eef7ff;
+  }
+  100% {
+    transform: scale(1);
+    background: #fff;
+  }
 }

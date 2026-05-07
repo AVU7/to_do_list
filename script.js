@@ -4,6 +4,7 @@ const taskList = document.getElementById("taskList");
 const count = document.getElementById("count");
 
 const tasks = [];
+let nextTaskId = 1;
 
 function updateCount() {
   const total = tasks.length;
@@ -11,12 +12,13 @@ function updateCount() {
   count.textContent = `${done}/${total} completed`;
 }
 
-function renderTasks() {
+function renderTasks(newTaskId = null) {
   taskList.innerHTML = "";
 
-  tasks.forEach((task, index) => {
+  tasks.forEach((task) => {
     const item = document.createElement("li");
     if (task.completed) item.classList.add("done");
+    if (task.id === newTaskId) item.classList.add("task-enter");
 
     const label = document.createElement("label");
     label.className = "task-label";
@@ -26,7 +28,12 @@ function renderTasks() {
     checkbox.checked = task.completed;
     checkbox.addEventListener("change", () => {
       task.completed = checkbox.checked;
-      renderTasks();
+      item.classList.toggle("done", task.completed);
+      item.classList.remove("task-complete-pulse");
+      // Restart animation when toggled quickly multiple times.
+      void item.offsetWidth;
+      item.classList.add("task-complete-pulse");
+      updateCount();
     });
 
     const text = document.createElement("span");
@@ -41,8 +48,18 @@ function renderTasks() {
     deleteBtn.type = "button";
     deleteBtn.textContent = "Delete";
     deleteBtn.addEventListener("click", () => {
-      tasks.splice(index, 1);
-      renderTasks();
+      item.classList.add("task-exit");
+      item.addEventListener(
+        "animationend",
+        () => {
+          const taskIndex = tasks.findIndex((entry) => entry.id === task.id);
+          if (taskIndex !== -1) {
+            tasks.splice(taskIndex, 1);
+          }
+          renderTasks();
+        },
+        { once: true }
+      );
     });
 
     item.appendChild(label);
@@ -57,10 +74,11 @@ function addTask() {
   const text = taskInput.value.trim();
   if (!text) return;
 
-  tasks.push({ text, completed: false });
+  const newTask = { id: nextTaskId++, text, completed: false };
+  tasks.push(newTask);
   taskInput.value = "";
   taskInput.focus();
-  renderTasks();
+  renderTasks(newTask.id);
 }
 
 addBtn.addEventListener("click", addTask);
