@@ -3,9 +3,11 @@ const addBtn = document.getElementById("addBtn");
 const taskList = document.getElementById("taskList");
 const count = document.getElementById("count");
 const themeToggle = document.getElementById("themeToggle");
+const filterButtons = document.querySelectorAll(".filter-btn");
 
 const tasks = [];
 let nextTaskId = 1;
+let currentFilter = "all";
 const THEME_STORAGE_KEY = "todo-theme";
 const TASKS_STORAGE_KEY = "todo-tasks";
 
@@ -46,10 +48,28 @@ function updateCount() {
   count.textContent = `${done}/${total} completed`;
 }
 
+function getVisibleTasks() {
+  if (currentFilter === "active") {
+    return tasks.filter((task) => !task.completed);
+  }
+  if (currentFilter === "completed") {
+    return tasks.filter((task) => task.completed);
+  }
+  return tasks;
+}
+
+function updateFilterButtons() {
+  filterButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.filter === currentFilter);
+  });
+}
+
 function renderTasks(newTaskId = null) {
   taskList.innerHTML = "";
 
-  tasks.forEach((task) => {
+  const visibleTasks = getVisibleTasks();
+
+  visibleTasks.forEach((task) => {
     const item = document.createElement("li");
     if (task.completed) item.classList.add("done");
     if (task.id === newTaskId) item.classList.add("task-enter");
@@ -68,7 +88,7 @@ function renderTasks(newTaskId = null) {
       void item.offsetWidth;
       item.classList.add("task-complete-pulse");
       saveTasks();
-      updateCount();
+      renderTasks();
     });
 
     const text = document.createElement("span");
@@ -104,6 +124,7 @@ function renderTasks(newTaskId = null) {
   });
 
   updateCount();
+  updateFilterButtons();
 }
 
 function addTask() {
@@ -140,6 +161,13 @@ themeToggle.addEventListener("click", () => {
   const nextTheme = isDark ? "light" : "dark";
   applyTheme(nextTheme);
   localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+});
+
+filterButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    currentFilter = button.dataset.filter;
+    renderTasks();
+  });
 });
 
 initializeTheme();

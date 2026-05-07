@@ -22,6 +22,11 @@
       <input id="taskInput" type="text" placeholder="Add a new task...">
       <button id="addBtn" type="button">Add</button>
     </div>
+    <div class="filters" role="group" aria-label="Task filters">
+      <button class="filter-btn active" data-filter="all" type="button">All</button>
+      <button class="filter-btn" data-filter="active" type="button">Active</button>
+      <button class="filter-btn" data-filter="completed" type="button">Completed</button>
+    </div>
     <ul id="taskList"></ul>
     <p id="count" class="meta">0 tasks</p>
   </main>
