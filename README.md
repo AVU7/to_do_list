@@ -9,6 +9,8 @@ A simple and clean to-do list web app built with plain HTML, CSS, and JavaScript
 - Delete tasks
 - View live completion count (`completed/total`)
 - Press `Enter` to quickly add tasks
+- Dark and light theme toggle in the navbar
+- Smooth animations for adding, completing, and deleting tasks
 
 ## Project Structure
 
@@ -32,6 +34,14 @@ No installation or dependencies are required.
 > - Press `Win + Shift + S` to open Snipping Tool.
 > - Select the app area and save the image.
 > - Save files in `screenshots/` using the names below.
+
+### Light Theme
+
+![Light Theme](screenshots/light-theme.png)
+
+### Dark Theme
+
+![Dark Theme](screenshots/dark-theme.png)
 
 ### Main View
 
