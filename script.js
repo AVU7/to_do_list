@@ -7,6 +7,38 @@ const themeToggle = document.getElementById("themeToggle");
 const tasks = [];
 let nextTaskId = 1;
 const THEME_STORAGE_KEY = "todo-theme";
+const TASKS_STORAGE_KEY = "todo-tasks";
+
+function saveTasks() {
+  localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
+}
+
+function loadTasks() {
+  const savedTasks = localStorage.getItem(TASKS_STORAGE_KEY);
+  if (!savedTasks) return;
+
+  try {
+    const parsed = JSON.parse(savedTasks);
+    if (!Array.isArray(parsed)) return;
+
+    parsed.forEach((task) => {
+      if (
+        typeof task === "object" &&
+        task !== null &&
+        typeof task.id === "number" &&
+        typeof task.text === "string" &&
+        typeof task.completed === "boolean"
+      ) {
+        tasks.push(task);
+      }
+    });
+
+    const maxId = tasks.reduce((currentMax, task) => Math.max(currentMax, task.id), 0);
+    nextTaskId = maxId + 1;
+  } catch (error) {
+    console.error("Unable to load saved tasks:", error);
+  }
+}
 
 function updateCount() {
   const total = tasks.length;
@@ -35,6 +67,7 @@ function renderTasks(newTaskId = null) {
       // Restart animation when toggled quickly multiple times.
       void item.offsetWidth;
       item.classList.add("task-complete-pulse");
+      saveTasks();
       updateCount();
     });
 
@@ -58,6 +91,7 @@ function renderTasks(newTaskId = null) {
           if (taskIndex !== -1) {
             tasks.splice(taskIndex, 1);
           }
+          saveTasks();
           renderTasks();
         },
         { once: true }
@@ -78,6 +112,7 @@ function addTask() {
 
   const newTask = { id: nextTaskId++, text, completed: false };
   tasks.push(newTask);
+  saveTasks();
   taskInput.value = "";
   taskInput.focus();
   renderTasks(newTask.id);
@@ -108,6 +143,8 @@ themeToggle.addEventListener("click", () => {
 });
 
 initializeTheme();
+loadTasks();
+renderTasks();
 addBtn.addEventListener("click", addTask);
 taskInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") addTask();
